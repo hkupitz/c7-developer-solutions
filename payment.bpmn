@@ -23,8 +23,12 @@
     </bpmn:task>
     <bpmn:sequenceFlow id="Flow_1xx9yqt" sourceRef="StartEvent_1" targetRef="Activity_1yoz56e" />
     <bpmn:sequenceFlow id="Flow_1uyjzfm" sourceRef="Activity_1yoz56e" targetRef="Gateway_1o7wpe7" />
-    <bpmn:sequenceFlow id="Flow_14w8d76" name="Yes" sourceRef="Gateway_1o7wpe7" targetRef="Activity_1tl8orc" />
-    <bpmn:sequenceFlow id="Flow_0xaseis" name="No" sourceRef="Gateway_1o7wpe7" targetRef="Gateway_077z9d9" />
+    <bpmn:sequenceFlow id="Flow_14w8d76" name="No" sourceRef="Gateway_1o7wpe7" targetRef="Activity_1tl8orc">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">#{orderTotal &gt; customerCredit}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_0xaseis" name="Yes" sourceRef="Gateway_1o7wpe7" targetRef="Gateway_077z9d9">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">#{orderTotal &lt;= customerCredit}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_1l6gcpf" sourceRef="Activity_1tl8orc" targetRef="Gateway_077z9d9" />
     <bpmn:sequenceFlow id="Flow_0lkeqko" sourceRef="Gateway_077z9d9" targetRef="Event_1xd1s0j" />
     <bpmn:task id="Activity_1tl8orc" name="Charge credit card">
@@ -75,14 +79,14 @@
         <di:waypoint x="433" y="243" />
         <di:waypoint x="523" y="243" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="439" y="183" width="18" height="14" />
+          <dc:Bounds x="441" y="183" width="15" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_088g4hv" bpmnElement="Flow_0xaseis">
         <di:waypoint x="458" y="130" />
         <di:waypoint x="688" y="130" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="566" y="112" width="15" height="14" />
+          <dc:Bounds x="565" y="112" width="18" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_0g5l70s" bpmnElement="Flow_1l6gcpf">
