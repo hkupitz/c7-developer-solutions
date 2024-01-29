@@ -23,9 +23,7 @@
     </bpmn:task>
     <bpmn:sequenceFlow id="Flow_1xx9yqt" sourceRef="StartEvent_1" targetRef="Activity_1yoz56e" />
     <bpmn:sequenceFlow id="Flow_1uyjzfm" sourceRef="Activity_1yoz56e" targetRef="Gateway_1o7wpe7" />
-    <bpmn:sequenceFlow id="Flow_14w8d76" name="No" sourceRef="Gateway_1o7wpe7" targetRef="Activity_1tl8orc">
-      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression" />
-    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_14w8d76" name="No" sourceRef="Gateway_1o7wpe7" targetRef="Activity_1tl8orc" />
     <bpmn:sequenceFlow id="Flow_0xaseis" name="Yes" sourceRef="Gateway_1o7wpe7" targetRef="Gateway_077z9d9" />
     <bpmn:sequenceFlow id="Flow_1l6gcpf" sourceRef="Activity_1tl8orc" targetRef="Gateway_077z9d9" />
     <bpmn:sequenceFlow id="Flow_0lkeqko" sourceRef="Gateway_077z9d9" targetRef="Event_1xd1s0j" />
