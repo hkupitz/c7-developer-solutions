@@ -17,20 +17,24 @@
     <bpmn:endEvent id="Event_1xd1s0j" name="Payment completed">
       <bpmn:incoming>Flow_0lkeqko</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:task id="Activity_1yoz56e" name="Deduct credit">
-      <bpmn:incoming>Flow_1xx9yqt</bpmn:incoming>
-      <bpmn:outgoing>Flow_1uyjzfm</bpmn:outgoing>
-    </bpmn:task>
     <bpmn:sequenceFlow id="Flow_1xx9yqt" sourceRef="StartEvent_1" targetRef="Activity_1yoz56e" />
     <bpmn:sequenceFlow id="Flow_1uyjzfm" sourceRef="Activity_1yoz56e" targetRef="Gateway_1o7wpe7" />
-    <bpmn:sequenceFlow id="Flow_14w8d76" name="No" sourceRef="Gateway_1o7wpe7" targetRef="Activity_1tl8orc" />
-    <bpmn:sequenceFlow id="Flow_0xaseis" name="Yes" sourceRef="Gateway_1o7wpe7" targetRef="Gateway_077z9d9" />
+    <bpmn:sequenceFlow id="Flow_14w8d76" name="No" sourceRef="Gateway_1o7wpe7" targetRef="Activity_1tl8orc">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">#{orderTotal &gt; customerCredit}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_0xaseis" name="Yes" sourceRef="Gateway_1o7wpe7" targetRef="Gateway_077z9d9">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">#{orderTotal &lt;= customerCredit}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
     <bpmn:sequenceFlow id="Flow_1l6gcpf" sourceRef="Activity_1tl8orc" targetRef="Gateway_077z9d9" />
     <bpmn:sequenceFlow id="Flow_0lkeqko" sourceRef="Gateway_077z9d9" targetRef="Event_1xd1s0j" />
-    <bpmn:task id="Activity_1tl8orc" name="Charge credit card">
+    <bpmn:serviceTask id="Activity_1yoz56e" name="Deduct credit" camunda:type="external" camunda:topic="creditDeduction">
+      <bpmn:incoming>Flow_1xx9yqt</bpmn:incoming>
+      <bpmn:outgoing>Flow_1uyjzfm</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:serviceTask id="Activity_1tl8orc" name="Charge credit card" camunda:type="external" camunda:topic="creditCardCharging">
       <bpmn:incoming>Flow_14w8d76</bpmn:incoming>
       <bpmn:outgoing>Flow_1l6gcpf</bpmn:outgoing>
-    </bpmn:task>
+    </bpmn:serviceTask>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="PaymentProcess">
@@ -55,11 +59,11 @@
           <dc:Bounds x="788" y="155" width="51" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_0px6nf2" bpmnElement="Activity_1yoz56e">
+      <bpmndi:BPMNShape id="Activity_0683t4n_di" bpmnElement="Activity_1yoz56e">
         <dc:Bounds x="253" y="90" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0i4566o_di" bpmnElement="Activity_1tl8orc">
+      <bpmndi:BPMNShape id="Activity_1boh1el_di" bpmnElement="Activity_1tl8orc">
         <dc:Bounds x="523" y="203" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_0mqsltm" bpmnElement="Flow_1xx9yqt">
