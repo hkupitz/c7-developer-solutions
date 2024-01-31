@@ -72,6 +72,21 @@
       <groupId>javax.xml.bind</groupId>
       <artifactId>jaxb-api</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.camunda.community</groupId>
+      <artifactId>camunda-engine-rest-client-openapi-java</artifactId>
+      <version>7.20.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.squareup.okhttp3</groupId>
+      <artifactId>okhttp</artifactId>
+      <version>4.11.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.squareup.okhttp3</groupId>
+      <artifactId>logging-interceptor</artifactId>
+      <version>4.9.3</version>
+    </dependency>
 
     <!-- Main dependencies -->
     <dependency>
@@ -98,11 +113,13 @@
     <dependency>
       <groupId>org.camunda.bpm.assert</groupId>
       <artifactId>camunda-bpm-assert</artifactId>
+      <version>15.0.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.camunda.bpm.extension</groupId>
       <artifactId>camunda-bpm-process-test-coverage-junit5</artifactId>
+      <version>1.0.3</version>
       <scope>test</scope>
     </dependency>
 

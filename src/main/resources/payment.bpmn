@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1ppm2cb" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.19.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.20.0">
   <bpmn:process id="PaymentProcess" name="Payment process" isExecutable="true" camunda:historyTimeToLive="180">
-    <bpmn:startEvent id="StartEvent_1" name="Payment requested">
-      <bpmn:outgoing>Flow_1xx9yqt</bpmn:outgoing>
-    </bpmn:startEvent>
     <bpmn:exclusiveGateway id="Gateway_1o7wpe7" name="Credit sufficient?">
       <bpmn:incoming>Flow_1uyjzfm</bpmn:incoming>
       <bpmn:outgoing>Flow_14w8d76</bpmn:outgoing>
@@ -14,9 +11,6 @@
       <bpmn:incoming>Flow_1l6gcpf</bpmn:incoming>
       <bpmn:outgoing>Flow_0lkeqko</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:endEvent id="Event_1xd1s0j" name="Payment completed">
-      <bpmn:incoming>Flow_0lkeqko</bpmn:incoming>
-    </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_1xx9yqt" sourceRef="StartEvent_1" targetRef="Activity_1yoz56e" />
     <bpmn:sequenceFlow id="Flow_1uyjzfm" sourceRef="Activity_1yoz56e" targetRef="Gateway_1o7wpe7" />
     <bpmn:sequenceFlow id="Flow_14w8d76" name="No" sourceRef="Gateway_1o7wpe7" targetRef="Activity_1tl8orc">
@@ -35,15 +29,18 @@
       <bpmn:incoming>Flow_14w8d76</bpmn:incoming>
       <bpmn:outgoing>Flow_1l6gcpf</bpmn:outgoing>
     </bpmn:serviceTask>
+    <bpmn:startEvent id="StartEvent_1" name="Payment requested">
+      <bpmn:outgoing>Flow_1xx9yqt</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_0uxrwgo" messageRef="Message_36ptepn" />
+    </bpmn:startEvent>
+    <bpmn:endEvent id="Event_1xd1s0j" name="Payment completed">
+      <bpmn:incoming>Flow_0lkeqko</bpmn:incoming>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_010u1c6" camunda:type="external" camunda:topic="paymentCompletion" />
+    </bpmn:endEvent>
   </bpmn:process>
+  <bpmn:message id="Message_36ptepn" name="paymentRequestMessage" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="PaymentProcess">
-      <bpmndi:BPMNShape id="BPMNShape_0zww00g" bpmnElement="StartEvent_1">
-        <dc:Bounds x="162" y="112" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="156" y="155" width="49" height="27" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_0lqqknv" bpmnElement="Gateway_1o7wpe7" isMarkerVisible="true">
         <dc:Bounds x="408" y="105" width="50" height="50" />
         <bpmndi:BPMNLabel>
@@ -53,18 +50,24 @@
       <bpmndi:BPMNShape id="BPMNShape_1r862zw" bpmnElement="Gateway_077z9d9" isMarkerVisible="true">
         <dc:Bounds x="688" y="105" width="50" height="50" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_0sgzzsw" bpmnElement="Event_1xd1s0j">
-        <dc:Bounds x="795" y="112" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="788" y="155" width="51" height="27" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0683t4n_di" bpmnElement="Activity_1yoz56e">
         <dc:Bounds x="260" y="90" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_1boh1el_di" bpmnElement="Activity_1tl8orc">
         <dc:Bounds x="523" y="203" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1oh1n7l_di" bpmnElement="StartEvent_1">
+        <dc:Bounds x="162" y="112" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="156" y="155" width="49" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1sl0d7e_di" bpmnElement="Event_1xd1s0j">
+        <dc:Bounds x="795" y="112" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="788" y="155" width="51" height="27" />
+        </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_0mqsltm" bpmnElement="Flow_1xx9yqt">
         <di:waypoint x="198" y="130" />

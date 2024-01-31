@@ -39,6 +39,7 @@ public class CustomerCreditHandler implements ExternalTaskHandler {
     variables.put("openAmount", openAmount);
     variables.put("customerCredit", customerCredit);
 
+
     externalTaskService.complete(externalTask, variables);
   }
 }
