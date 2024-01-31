@@ -17,16 +17,23 @@ public class PaymentUnitTest {
   public void testHappyPath() {
     ProcessInstance processInstance = runtimeService()
       .startProcessInstanceByKey("PaymentProcess",
-        withVariables("orderTotal", 45.99, "customerCredit", 30.00));
+        withVariables("orderTotal", 45.99,
+                      "customerID", "cust30",
+                      "creditCardNumber", "1234 5678",
+                      "expiryDate", "09/24",
+                      "CVC", "123"));
 
     assertThat(processInstance).isWaitingAt(findId("Deduct credit"))
       .externalTask().hasTopicName("creditDeduction");
-    complete(externalTask());
+    complete(externalTask(), withVariables("customerCredit", 30,
+                                           "openAmount", 15.99));
 
     assertThat(processInstance).isWaitingAt(findId("Charge credit card"))
       .externalTask().hasTopicName("creditCardCharging");
     complete(externalTask());
 
-    assertThat(processInstance).isEnded().hasPassed(findId("Payment completed"));
+    assertThat(processInstance).isEnded().hasPassed(findId("Payment completed"))
+      .variables().contains(entry("customerCredit", 30),
+                            entry("openAmount", 15.99));
   }
 }
