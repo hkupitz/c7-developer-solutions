@@ -6,7 +6,12 @@
       <bpmn:outgoing>Flow_0wjbgf0</bpmn:outgoing>
     </bpmn:startEvent>
     <bpmn:sendTask id="Activity_0teidse" name="Invoke payment" camunda:type="external" camunda:topic="paymentRequest">
-      <bpmn:incoming>Flow_0wjbgf0</bpmn:incoming>
+      <bpmn:extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="orderTotal">${discountedAmount}</camunda:inputParameter>
+        </camunda:inputOutput>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_02cottx</bpmn:incoming>
       <bpmn:outgoing>Flow_1mkxiv3</bpmn:outgoing>
     </bpmn:sendTask>
     <bpmn:intermediateCatchEvent id="Event_06jersd" name="Payment completed">
@@ -17,9 +22,20 @@
     <bpmn:endEvent id="Event_0nfpo4t" name="Order completed">
       <bpmn:incoming>Flow_0je6fzf</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:sequenceFlow id="Flow_0wjbgf0" sourceRef="StartEvent_1" targetRef="Activity_0teidse" />
+    <bpmn:sequenceFlow id="Flow_0wjbgf0" sourceRef="StartEvent_1" targetRef="Activity_0cu55r9" />
     <bpmn:sequenceFlow id="Flow_1mkxiv3" sourceRef="Activity_0teidse" targetRef="Event_06jersd" />
     <bpmn:sequenceFlow id="Flow_0je6fzf" sourceRef="Event_06jersd" targetRef="Event_0nfpo4t" />
+    <bpmn:sequenceFlow id="Flow_0m7i5jy" sourceRef="Activity_0cu55r9" targetRef="Activity_1dypts5" />
+    <bpmn:businessRuleTask id="Activity_0cu55r9" name="Get discount" camunda:resultVariable="discount" camunda:decisionRef="orderDiscount" camunda:mapDecisionResult="singleEntry">
+      <bpmn:incoming>Flow_0wjbgf0</bpmn:incoming>
+      <bpmn:outgoing>Flow_0m7i5jy</bpmn:outgoing>
+    </bpmn:businessRuleTask>
+    <bpmn:sequenceFlow id="Flow_02cottx" sourceRef="Activity_1dypts5" targetRef="Activity_0teidse" />
+    <bpmn:scriptTask id="Activity_1dypts5" name="Apply discount" scriptFormat="groovy" camunda:resultVariable="discountedAmount">
+      <bpmn:incoming>Flow_0m7i5jy</bpmn:incoming>
+      <bpmn:outgoing>Flow_02cottx</bpmn:outgoing>
+      <bpmn:script>orderTotal - (orderTotal * discount / 100)</bpmn:script>
+    </bpmn:scriptTask>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="OrderProcess">
@@ -29,33 +45,47 @@
           <dc:Bounds x="154" y="145" width="73" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_07ghhyb_di" bpmnElement="Activity_0cu55r9">
+        <dc:Bounds x="270" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_06lt57d_di" bpmnElement="Activity_1dypts5">
+        <dc:Bounds x="440" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_0h0kca6" bpmnElement="Activity_0teidse">
-        <dc:Bounds x="263" y="80" width="100" height="80" />
+        <dc:Bounds x="603" y="80" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_1jy2kxv" bpmnElement="Event_06jersd">
-        <dc:Bounds x="425" y="102" width="36" height="36" />
+        <dc:Bounds x="765" y="102" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="418" y="145" width="51" height="27" />
+          <dc:Bounds x="758" y="145" width="51" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_1xovik2" bpmnElement="Event_0nfpo4t">
-        <dc:Bounds x="525" y="102" width="36" height="36" />
+        <dc:Bounds x="865" y="102" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="502" y="145" width="82" height="14" />
+          <dc:Bounds x="842" y="145" width="82" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_19qhsv6" bpmnElement="Flow_0wjbgf0">
         <di:waypoint x="208" y="120" />
-        <di:waypoint x="263" y="120" />
+        <di:waypoint x="270" y="120" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_0zq2uzv" bpmnElement="Flow_1mkxiv3">
-        <di:waypoint x="363" y="120" />
-        <di:waypoint x="425" y="120" />
+        <di:waypoint x="703" y="120" />
+        <di:waypoint x="765" y="120" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="BPMNEdge_0fnelwf" bpmnElement="Flow_0je6fzf">
-        <di:waypoint x="461" y="120" />
-        <di:waypoint x="525" y="120" />
+        <di:waypoint x="801" y="120" />
+        <di:waypoint x="865" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0m7i5jy_di" bpmnElement="Flow_0m7i5jy">
+        <di:waypoint x="370" y="120" />
+        <di:waypoint x="440" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_02cottx_di" bpmnElement="Flow_02cottx">
+        <di:waypoint x="540" y="120" />
+        <di:waypoint x="603" y="120" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

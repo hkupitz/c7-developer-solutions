@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:camunda="http://camunda.org/schema/1.0/dmn" id="orderDiscountDRD" name="DRD" namespace="http://camunda.org/schema/1.0/dmn" exporter="Camunda Modeler" exporterVersion="5.19.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.20.0">
+  <decision id="orderDiscount" name="Order discount" camunda:historyTimeToLive="180">
+    <decisionTable id="DecisionTable_1wxm16t">
+      <input id="Input_1" label="Order amount">
+        <inputExpression id="InputExpression_1" typeRef="double">
+          <text>orderTotal</text>
+        </inputExpression>
+      </input>
+      <output id="Output_1" label="Discount percentage" name="discount" typeRef="integer" />
+      <rule id="DecisionRule_1f9lvo0">
+        <inputEntry id="UnaryTests_099c0vr">
+          <text>&lt; 40.00</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_098fcx1">
+          <text>0</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_11qwbbe">
+        <inputEntry id="UnaryTests_0luafjq">
+          <text>[40.00..60.00[</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0721gh6">
+          <text>2</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1ga0vsw">
+        <inputEntry id="UnaryTests_01893b8">
+          <text>[60.00..100.00[</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_02nme0k">
+          <text>3</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1d31w9x">
+        <inputEntry id="UnaryTests_0f3drs2">
+          <text>&gt;= 100.00</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0gcglzh">
+          <text>4</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+  <dmndi:DMNDI>
+    <dmndi:DMNDiagram>
+      <dmndi:DMNShape dmnElementRef="orderDiscount">
+        <dc:Bounds height="80" width="180" x="160" y="100" />
+      </dmndi:DMNShape>
+    </dmndi:DMNDiagram>
+  </dmndi:DMNDI>
+</definitions>
