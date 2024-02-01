@@ -34,6 +34,8 @@ public class CreditCardHandler implements ExternalTaskHandler {
       service.chargeAmount(cardNumber, cvc, expiryDate, openAmount);
       externalTaskService.complete(externalTask);
     } catch (IllegalArgumentException e) {
+      externalTaskService.handleBpmnError(externalTask, "creditCardChargeError", e.getLocalizedMessage());
+    } catch (Exception e) {
       StringWriter sw = new StringWriter();
       e.printStackTrace(new PrintWriter(sw));
       externalTaskService.handleFailure(externalTask, "credit card expired", sw.toString(), 0, 0);

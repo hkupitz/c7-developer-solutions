@@ -37,8 +37,18 @@
       <bpmn:incoming>Flow_0lkeqko</bpmn:incoming>
       <bpmn:messageEventDefinition id="MessageEventDefinition_010u1c6" camunda:type="external" camunda:topic="paymentCompletion" />
     </bpmn:endEvent>
+    <bpmn:boundaryEvent id="Event_0mnia9i" name="Charging failed" attachedToRef="Activity_1tl8orc">
+      <bpmn:outgoing>Flow_1n6ns68</bpmn:outgoing>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_0gjcy3w" errorRef="Error_0ixmy70" camunda:errorCodeVariable="errorCode" camunda:errorMessageVariable="errorMessage" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="Flow_1n6ns68" sourceRef="Event_0mnia9i" targetRef="Event_08pru8h" />
+    <bpmn:endEvent id="Event_08pru8h" name="Payment failed">
+      <bpmn:incoming>Flow_1n6ns68</bpmn:incoming>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_1f2b7g3" camunda:type="external" camunda:topic="paymentCompletion" />
+    </bpmn:endEvent>
   </bpmn:process>
   <bpmn:message id="Message_36ptepn" name="paymentRequestMessage" />
+  <bpmn:error id="Error_0ixmy70" name="Credit card charge error" errorCode="creditCardChargeError" />
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="PaymentProcess">
       <bpmndi:BPMNShape id="BPMNShape_0lqqknv" bpmnElement="Gateway_1o7wpe7" isMarkerVisible="true">
@@ -67,6 +77,18 @@
         <dc:Bounds x="795" y="112" width="36" height="36" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="788" y="155" width="51" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1nvfdnl_di" bpmnElement="Event_08pru8h">
+        <dc:Bounds x="795" y="352" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="777" y="395" width="73" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0obnwo7_di" bpmnElement="Event_0mnia9i">
+        <dc:Bounds x="552" y="265" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="583" y="308" width="74" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="BPMNEdge_0mqsltm" bpmnElement="Flow_1xx9yqt">
@@ -100,6 +122,11 @@
       <bpmndi:BPMNEdge id="BPMNEdge_1ubpa55" bpmnElement="Flow_0lkeqko">
         <di:waypoint x="738" y="130" />
         <di:waypoint x="795" y="130" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1n6ns68_di" bpmnElement="Flow_1n6ns68">
+        <di:waypoint x="570" y="301" />
+        <di:waypoint x="570" y="370" />
+        <di:waypoint x="795" y="370" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
