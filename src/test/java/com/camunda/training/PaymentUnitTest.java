@@ -32,23 +32,50 @@ public class PaymentUnitTest {
       .externalTask().hasTopicName("creditCardCharging");
     complete(externalTask());
 
+    assertThat(processInstance).isWaitingAt(findId("Payment completed"))
+      .externalTask().hasTopicName("paymentCompletion");
+    complete(externalTask());
+
     assertThat(processInstance).isEnded().hasPassed(findId("Payment completed"))
       .variables().contains(entry("customerCredit", 30),
                             entry("openAmount", 15.99));
   }
 
   @Test
+  public void testEnoughCreditPath() {
+    ProcessInstance processInstance = runtimeService().createProcessInstanceByKey("PaymentProcess")
+      .startAfterActivity(findId("Deduct credit"))
+      .setVariables(withVariables("openAmount", 0))
+      .execute();
+
+     assertThat(processInstance).isWaitingAt(findId("Payment completed"))
+      .externalTask().hasTopicName("paymentCompletion");
+    complete(externalTask());
+  }
+
+  @Test
   public void testCreditCardFailurePath() {
     ProcessInstance processInstance = runtimeService().createProcessInstanceByKey("PaymentProcess")
-      .startBeforeActivity(findId("Charge credit card"))
+      .startBeforeActivity(findId("Deduct credit"))
+      .setVariables(withVariables("orderTotal", 50))
       .execute();
+
+    assertThat(processInstance).isWaitingAt(findId("Deduct credit"));
+    complete(externalTask(), withVariables("customerCredit", 30, "openAmount", 20));
 
     assertThat(processInstance).isWaitingAt(findId("Charge credit card"));
 
     fetchAndLock("creditCardCharging", "junit-test-worker", 1);
     externalTaskService().handleBpmnError(externalTask().getId(), "junit-test-worker", "creditCardChargeError");
 
+    assertThat(processInstance).isWaitingAt(findId("Restore customer credit"))
+      .externalTask().hasTopicName("creditRestore");
+    complete(externalTask());
+
     assertThat(processInstance).isWaitingAt(findId("Payment failed"))
       .externalTask().hasTopicName("paymentCompletion");
+    complete(externalTask());
+
+    assertThat(processInstance).isEnded().hasPassed(findId("Payment failed"));
   }
 }
